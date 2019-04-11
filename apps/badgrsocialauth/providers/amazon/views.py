@@ -32,16 +32,9 @@ class AmazonOAuth2Adapter(OAuth2Adapter):
             self.profile_url,
             params={'access_token': token})
         extra_data = response.json()
-        import pdb; pdb.set_trace()
-        if 'Profile' in extra_data:
-            extra_data = {
-                'user_id': extra_data['Profile']['CustomerId'],
-                'name': extra_data['Profile']['Name'],
-                'email': extra_data['Profile']['PrimaryEmail']
-            }
-        return self.get_provider().sociallogin_from_response(
-            request,
-            extra_data)
+
+        return self.get_provider().sociallogin_from_response(request,
+                                                             extra_data)
 
 
 oauth2_login = OAuth2LoginView.adapter_view(AmazonOAuth2Adapter)
