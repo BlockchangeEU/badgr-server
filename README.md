@@ -14,9 +14,10 @@ Visit https://github.com/concentricsky/badgr-server for README.md
 ## How to get started on your local development environment (Windows)
 Prerequisites:
 
-* git
-* python 2.7.x
-* mysql
+* PyCharm IDE
+* Git
+* Python 2.7.x
+* MySQL
 
 #### Installation steps (for Windows 10, 64-bit)
 * Clone badgr-server project -> https://github.com/Sphereon-Opensource/badgr-server
