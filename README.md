@@ -53,3 +53,36 @@ Prerequisites:
 * `python manage.py runserver`
 * Go to http://localhost:8000/staff
 * Sign in as the superuser you created above
+
+### Configuring Factom Blockchain Connection
+
+In order to submit evidences to the Factom Blockchain, you will need access to:
+* running `factomd` and `factom-walletd` instances
+* an entry credit address to fund Factom Entries
+* a 32 byte private seed for producing digital signatures using the Ed25519 algorithm
+* Factom Chain Id where entries can be commited
+
+This information needs to be included in the following variables in `/apps/mainsite/settings_local.py`
+
+```python
+#location where factomd is running eg. 'http://localhost:8088'
+FACTOMD_HOST = '<insert-factomd-endpoint>'
+
+#location where factom-walletd is running eg. 'http://localhost:8089' 
+FACTOM_WALLETD_HOST = '<insert-factom-walletd-endpoint>'
+
+#funded entry credit address that can fund Factom entries
+EC_ADDRESS = '<insert-entry-credit-address>'
+
+#seed for secret key used to sign badge commitments (should be 32 bytes in hex) 
+SECRET_SIGNING_SEED = '<insert-secret-seed>'
+
+#chain id where badges should be commited. must be an existing chain
+BADGE_COMMIT_CHAIN_ID = '<insert-chain-id>'
+```
+
+Using the `factom-cli` you can create a new chain as follows:
+```bash
+factom-cli addchain -n {chainName} {EC_Public_Key} < {filename}
+```
+where the data for the first entry is contained in the file `{filename}`.

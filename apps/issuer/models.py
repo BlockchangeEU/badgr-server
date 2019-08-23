@@ -5,6 +5,7 @@ import datetime
 import dateutil
 import re
 import uuid
+import png
 from collections import OrderedDict
 from itertools import chain
 
@@ -24,6 +25,7 @@ from json import loads as json_loads
 from json import dumps as json_dumps
 from jsonfield import JSONField
 from openbadges_bakery import bake
+from openbadges_bakery import utils
 from django.utils import timezone
 
 import badgrlog
@@ -36,6 +38,9 @@ from mainsite import blacklist
 from mainsite.utils import OriginSetting, generate_entity_uri
 from .utils import generate_sha256_hashstring, CURRENT_OBI_VERSION, get_obi_context, add_obi_version_ifneeded, \
     UNVERSIONED_BAKED_VERSION
+from mainsite.settings_local import FACTOMD_HOST, FACTOM_WALLETD_HOST, SECRET_SIGNING_SEED, EC_ADDRESS, \
+    BADGE_COMMIT_CHAIN_ID
+from issuer.blockchain_service import BlockchainService
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -734,6 +739,10 @@ class BadgeInstance(BaseAuditedModel,
     objects = BadgeInstanceManager()
     cached = SlugOrJsonIdCacheModelManager(slug_kwarg_name='entity_id', slug_field_name='entity_id')
 
+    ### Factom blockchain connection
+    blockchain_service = BlockchainService(FACTOMD_HOST, FACTOM_WALLETD_HOST, EC_ADDRESS,
+                                           SECRET_SIGNING_SEED, chain_id=BADGE_COMMIT_CHAIN_ID)
+
     class Meta:
         index_together = (
                 ('recipient_identifier', 'badgeclass', 'revoked'),
@@ -911,6 +920,11 @@ class BadgeInstance(BaseAuditedModel,
                     award.delete()
             except ImportError:
                 pass
+
+    def register_on_blockchain(self):
+        ### Register badge on Factom blockchain
+        image_file = self.image.file.read()
+        self.blockchain_service.register(image_file)
 
     def notify_earner(self, badgr_app=None):
         """

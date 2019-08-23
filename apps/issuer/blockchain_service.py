@@ -1,4 +1,4 @@
-from factom import Factomd, FactomWalletd
+from factom import FactomWalletd
 from django.conf import settings
 from issuer.blockchain_utils import BlockchainRegistrationError
 import nacl.hash
@@ -8,6 +8,8 @@ import nacl.exceptions
 import uuid
 import time
 import binascii
+
+from issuer.factom_api_service import ExtendedFactomd
 
 
 class BlockchainService:
@@ -26,7 +28,7 @@ class BlockchainService:
     :type secret_seed: str (hex)
     """
     def __init__(self, factomd_host, factom_walletd_host, ec_address, secret_seed, chain_id=None):
-        self.factomd = Factomd(
+        self.factomd = ExtendedFactomd(
             host=factomd_host,
             ec_address=ec_address
         )
@@ -50,6 +52,14 @@ class BlockchainService:
 
         if commit_response['message'] != 'Entry Reveal Success':
             raise BlockchainRegistrationError(commit_response.message)
+
+        entryhash = commit_response['entryhash']
+
+        ack_resp = self.factomd.ack(entryhash, self.chain_id)
+        while (ack_resp['entrydata']['status'] != 'DBlockConfirmed'
+               and ack_resp['entrydata']['status'] != 'TransactionACK'):
+            time.sleep(2)
+            ack_resp = self.factomd.ack(entryhash, self.chain_id)
 
         return commit_response
 
@@ -115,13 +125,13 @@ class BlockchainService:
                    and chain_entry['extids'][1] == public_key_seed]
 
         if len(entries) < 1:
-            return {'message':'Entry not found in chain {}'.format(self.chain_id), 'verified':False}
+            return {'message': 'Entry not found in chain {}'.format(self.chain_id), 'verified':False}
 
         for chain_entry in entries:
             if self.verify_signed_entry(chain_entry, public_key_seed):
                 return {'message': 'Entry found in chain {}'.format(self.chain_id), 'verified':True}
 
-        return {'message':' Entry found in chain {} but signature was invalid'.format(self.chain_id), 'verified': False}
+        return {'message': ' Entry found in chain {} but signature was invalid'.format(self.chain_id), 'verified': False}
 
     @staticmethod
     def input_to_hash_bytes(input_data):

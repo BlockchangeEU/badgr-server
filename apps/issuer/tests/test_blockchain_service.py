@@ -3,6 +3,7 @@ import binascii
 from issuer.blockchain_service import BlockchainService
 from mainsite import TOP_DIR
 from django.test import TestCase
+from unittest import skip
 
 
 class TestBlockchainService(TestCase):
@@ -16,8 +17,9 @@ class TestBlockchainService(TestCase):
                                                     factom_walletd_host,
                                                     ec_address,
                                                     secret_signing_seed,
-                                                    chain_id='7fea7f93f20c8ca3a0b590e8833bd87b74affc8b338d0b692d0adffb6d82c13c')
+                                                    chain_id='4fe630d0a0ed2ee6cb1c75162cf7a5274339f8db8e1d9f8d6eecaf56e6e537fb')
 
+    @skip('Cannot write/read from the blockchain without factomd running')
     def test_blockchain_write(self):
         resp = self.blockchain_service.write(['test', 'external', 'ids'], 'test-content')
         assert resp['message'] == 'Entry Reveal Success'
@@ -38,6 +40,7 @@ class TestBlockchainService(TestCase):
         sig = self.blockchain_service.create_signature(msg)
         assert msg == self.blockchain_service.signature_to_msg(sig, self.blockchain_service.public_key)
 
+    @skip('Cannot write/read from the blockchain without factomd running')
     def test_register(self):
         image_path = self.get_test_image_path()
         with open(image_path) as f:
@@ -45,6 +48,7 @@ class TestBlockchainService(TestCase):
             resp = self.blockchain_service.register(img_bytes)
             assert resp['message'] == 'Entry Reveal Success'
 
+    @skip('Cannot write/read from the blockchain without factomd running')
     def test_verify(self):
         image_path = self.get_test_image_path()
         with open(image_path) as f:
