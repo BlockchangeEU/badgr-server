@@ -84,10 +84,10 @@ class BlockchainService:
     def verify_signed_entry(self, chain_entry, public_key_seed):
         timestamp_bytes = binascii.unhexlify(chain_entry['extids'][0])
         public_key = nacl.signing.VerifyKey(binascii.unhexlify(public_key_seed))
-        hash_signature_string = chain_entry['extids'][2]
-        content = chain_entry['content']
+        hash_signature_string = chain_entry['content']
+        hash_string = chain_entry['extids'][2]
 
-        hash_bytes = binascii.unhexlify(content)
+        hash_bytes = binascii.unhexlify(hash_string)
         msg = timestamp_bytes.join(hash_bytes)
         signed_msg = binascii.unhexlify(hash_signature_string)
 
@@ -104,10 +104,10 @@ class BlockchainService:
         hash_bytes = self.input_to_hash_bytes(input_data)
         hash_signature_bytes = self.create_signature(timestamp_bytes.join(hash_bytes))
 
-        content = binascii.hexlify(hash_bytes)
+        content = binascii.hexlify(hash_signature_bytes)
         ext_ids = [binascii.hexlify(timestamp_bytes),
                    binascii.hexlify(bytes(self.public_key)),
-                   binascii.hexlify(hash_signature_bytes)]
+                   binascii.hexlify(hash_bytes)]
 
         commit_response = self.write(ext_ids, content)
         if commit_response['message'] != 'Entry Reveal Success':
@@ -121,7 +121,7 @@ class BlockchainService:
         chain_data = self.factomd.read_chain(self.chain_id)
 
         entries = [chain_entry for chain_entry in chain_data
-                   if chain_entry['content'] == hash_string
+                   if chain_entry['extids'][2] == hash_string
                    and chain_entry['extids'][1] == public_key_seed]
 
         if len(entries) < 1:

@@ -54,7 +54,7 @@ class TestBlockchainService(TestCase):
         with open(image_path) as f:
             img_bytes = bytes(f.read())
             verify_msg = self.blockchain_service.verify(img_bytes, '903087db475049f5d2203bfdf9709bcc626ff52d7aa9bd46dea5f6a6540a1e56')
-            print(verify_msg)
+            assert verify_msg['verified']
 
     @staticmethod
     def get_testfiles_path(*args):
