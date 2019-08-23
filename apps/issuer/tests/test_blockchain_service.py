@@ -66,5 +66,3 @@ class TestBlockchainService(TestCase):
     def _base64_data_uri_encode(self, file, mime):
         encoded = base64.b64encode(file.read())
         return "data:{};base64,{}".format(mime, encoded)
-
-

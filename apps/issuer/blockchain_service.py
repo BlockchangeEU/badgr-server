@@ -140,4 +140,3 @@ class BlockchainService:
     @staticmethod
     def signature_to_msg(signed_msg, public_key):
         return public_key.verify(signed_msg, encoder=nacl.encoding.RawEncoder)
-

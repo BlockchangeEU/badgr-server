@@ -8,4 +8,3 @@ class ExtendedFactomd(Factomd):
             'chainid': chainid,
             'fulltransaction': fulltransaction
         })
-
