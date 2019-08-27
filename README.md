@@ -59,10 +59,12 @@ Prerequisites:
 In order to submit evidences to the Factom Blockchain, you will need access to:
 * running `factomd` and `factom-walletd` instances
 * an entry credit address to fund Factom Entries
-* a 32 byte private seed for producing digital signatures using the Ed25519 algorithm
-* Factom Chain Id where entries can be commited
+    * To create a new address using the `factom-cli` see https://docs.factom.com/cli#newecaddress
+* a 32 byte private seed for producing digital signatures using the Ed25519 algorithm. 
+    * For testing, an easy way to do this is by going to https://www.random.org/bytes/, and generating a hex encoded 32 random bytes.
+* Factom Chain Id where entries can be committed
 
-This information needs to be included in the following variables in `/apps/mainsite/settings_local.py`
+This information needs to be included in the following variables in `./apps/mainsite/settings_local.py`
 
 ```python
 #location where factomd is running eg. 'http://localhost:8088'

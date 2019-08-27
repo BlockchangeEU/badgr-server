@@ -48,7 +48,7 @@ class TestBlockchainService(TestCase):
             resp = self.blockchain_service.register(img_bytes)
             assert resp['message'] == 'Entry Reveal Success'
 
-    @skip('Cannot write/read from the blockchain without factomd running')
+    #@skip('Cannot write/read from the blockchain without factomd running')
     def test_verify(self):
         image_path = self.get_test_image_path()
         with open(image_path) as f:
@@ -61,7 +61,7 @@ class TestBlockchainService(TestCase):
         return os.path.join(TOP_DIR, 'apps', 'issuer', 'testfiles', *args)
 
     def get_test_image_path(self):
-        return os.path.join(self.get_testfiles_path(), 'guinea_pig_testing_badge.png')
+        return os.path.join(self.get_testfiles_path(), 'test-badge.png')
 
     def _base64_data_uri_encode(self, file, mime):
         encoded = base64.b64encode(file.read())

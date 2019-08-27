@@ -99,7 +99,6 @@ class BlockchainService:
         return msg == msg_result
 
     def register(self, input_data):
-
         timestamp_bytes = bytes(int(time.time()))
         hash_bytes = self.input_to_hash_bytes(input_data)
         hash_signature_bytes = self.create_signature(timestamp_bytes.join(hash_bytes))
