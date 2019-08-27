@@ -19,6 +19,12 @@ Prerequisites:
 * Python 2.7.x
 * MySQL
 
+When facing issues with installing dependencies (from requirements.txt), make sure to install dev libraries for MySQL and JPEG:
+```bash
+apt install libmysqlclient-dev
+apt install libjpeg8-dev zlib1g-dev
+```
+
 #### Installation steps (for Windows 10, 64-bit)
 * Clone badgr-server project -> https://github.com/Sphereon-Opensource/badgr-server
 * Download and install PyCharm IDE -> https://www.jetbrains.com/pycharm/download/
@@ -53,3 +59,48 @@ Prerequisites:
 * `python manage.py runserver`
 * Go to http://localhost:8000/staff
 * Sign in as the superuser you created above
+
+### Note for PyCharm Users (All Platforms)
+If you want to use `badgr-server` in PyCharm, you have to add the `./apps` directory to the local Python path. You can do this by going to Settings->Project->Project Interpreter and clicking on the gear icon next to the selected interpreter. Then go to Show All. With the project interpreter selected, the bottom icon (show paths) in the right will open the Python path. Click the "+" icon and select the `./apps` folder to add to the path.
+
+### Configuring Factom Blockchain Connection
+
+In order to submit evidences to the Factom Blockchain, you will need access to:
+* running `factomd` and `factom-walletd` instances
+* an entry credit address to fund Factom Entries
+    * To create a new address using the `factom-cli` see https://docs.factom.com/cli#newecaddress
+    * If you create this address using `factom-cli` it will keep the private address within the `factom-walletd`, the public address should go in the configuration as seen below.
+* a 32 byte private seed for producing digital signatures using the Ed25519 algorithm. 
+    * For testing, an easy way to do this is by going to https://www.random.org/bytes/, and generating a hex encoded 32 random bytes.
+* Factom Chain Id where entries can be committed
+
+This information needs to be included in the following variables in `./apps/mainsite/settings_local.py`
+
+```python
+#location where factomd is running eg. 'http://localhost:8088'
+FACTOMD_HOST = '<insert-factomd-endpoint>'
+
+#location where factom-walletd is running eg. 'http://localhost:8089' 
+FACTOM_WALLETD_HOST = '<insert-factom-walletd-endpoint>'
+
+#funded entry credit address that can fund Factom entries
+EC_ADDRESS = '<insert-entry-credit-public-address>'
+
+#seed for secret key used to sign badge commitments (should be 32 bytes in hex) 
+SECRET_SIGNING_SEED = '<insert-secret-seed>'
+
+#chain id where badges should be commited. must be an existing chain
+BADGE_COMMIT_CHAIN_ID = '<insert-chain-id>'
+```
+
+Using the `factom-cli` you can create a new chain as follows:
+```bash
+echo '{}' | factom-cli addchain -n {chainName} {EC_Public_Key}
+```
+
+#### Blockchain Service Tests
+In order to run the tests for the Factom blockchain connection, ensure:
+* a valid entry credit address being used in `./apps/issuer/tests/test_blockchain_service.py`
+* `factomd` and `factom-walletd` are running on a local testnet with 6s block time
+* the host addresses for `factomd` and `factom-walletd` in `./apps/issuer/tests/test_blockchain_service.py` correspond to the locations of the locally running daemons. 
+

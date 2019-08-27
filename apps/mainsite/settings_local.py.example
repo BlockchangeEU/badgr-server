@@ -222,3 +222,17 @@ LOGGING = {
     },
 }
 
+#location where factomd is running eg. 'http://localhost:8088'
+FACTOMD_HOST = '<insert-factomd-endpoint>'
+
+#location where factom-walletd is running eg. 'http://localhost:8089'
+FACTOM_WALLETD_HOST = '<insert-factom-walletd-endpoint>'
+
+#funded entry credit address that can fund Factom entries
+EC_ADDRESS = '<insert-entry-credit-public-address>'
+
+#seed for secret key used to sign badge commitments (should be 32 bytes in hex)
+SECRET_SIGNING_SEED = '<insert-secret-seed>'
+
+#chain id where badges should be commited. must be an existing chain
+BADGE_COMMIT_CHAIN_ID = '<insert-chain-id>'
