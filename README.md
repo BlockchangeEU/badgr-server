@@ -60,6 +60,7 @@ In order to submit evidences to the Factom Blockchain, you will need access to:
 * running `factomd` and `factom-walletd` instances
 * an entry credit address to fund Factom Entries
     * To create a new address using the `factom-cli` see https://docs.factom.com/cli#newecaddress
+    * If you create this address using `factom-cli` it will keep the private address within the `factom-walletd`, the public address should go in the configuration as seen below.
 * a 32 byte private seed for producing digital signatures using the Ed25519 algorithm. 
     * For testing, an easy way to do this is by going to https://www.random.org/bytes/, and generating a hex encoded 32 random bytes.
 * Factom Chain Id where entries can be committed
@@ -74,7 +75,7 @@ FACTOMD_HOST = '<insert-factomd-endpoint>'
 FACTOM_WALLETD_HOST = '<insert-factom-walletd-endpoint>'
 
 #funded entry credit address that can fund Factom entries
-EC_ADDRESS = '<insert-entry-credit-address>'
+EC_ADDRESS = '<insert-entry-credit-public-address>'
 
 #seed for secret key used to sign badge commitments (should be 32 bytes in hex) 
 SECRET_SIGNING_SEED = '<insert-secret-seed>'
