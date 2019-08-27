@@ -120,7 +120,8 @@ class BlockchainService:
         chain_data = self.factomd.read_chain(self.chain_id)
 
         entries = [chain_entry for chain_entry in chain_data
-                   if chain_entry['extids'][2] == hash_string
+                   if len(chain_entry['extids']) >= 3
+                   and chain_entry['extids'][2] == hash_string
                    and chain_entry['extids'][1] == public_key_seed]
 
         if len(entries) < 1:

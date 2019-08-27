@@ -19,6 +19,12 @@ Prerequisites:
 * Python 2.7.x
 * MySQL
 
+When facing issues with installing dependencies (from requirements.txt), make sure to install dev libraries for MySQL and JPEG:
+```bash
+apt install libmysqlclient-dev
+apt install libjpeg8-dev zlib1g-dev
+```
+
 #### Installation steps (for Windows 10, 64-bit)
 * Clone badgr-server project -> https://github.com/Sphereon-Opensource/badgr-server
 * Download and install PyCharm IDE -> https://www.jetbrains.com/pycharm/download/
