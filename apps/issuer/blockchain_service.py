@@ -74,10 +74,15 @@ class BlockchainService:
             'Badge Commitment Chain'
         )
 
-        time.sleep(2)
-
         if chain_create_response['message'] != 'Entry Reveal Success':
             raise BlockchainRegistrationError(chain_create_response['message'])
+
+        chain_id = chain_create_response['chainid']
+
+        ack_resp = self.factomd.ack(chain_create_response['entryhash'], chain_id)
+        while ack_resp['entrydata']['status'] != 'DBlockConfirmed':
+            time.sleep(2)
+            ack_resp = self.factomd.ack(chain_create_response['entryhash'], chain_id)
 
         return chain_create_response
 

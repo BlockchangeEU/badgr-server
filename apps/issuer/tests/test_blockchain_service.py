@@ -3,23 +3,23 @@ import binascii
 from issuer.blockchain_service import BlockchainService
 from mainsite import TOP_DIR
 from django.test import TestCase
-from unittest import skip
+import time
 
 
 class TestBlockchainService(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super(TestBlockchainService, cls).setUpClass()
         factomd_host = 'http://localhost:8088'
         factom_walletd_host = 'http://localhost:8089'
-        ec_address = 'EC25UEMqAB6JV61PtfqWymg9ALRPmMZYDep8TiaVfRoRYTeEXwhn'
+        ec_address = 'EC2yPMoPTKNW53TKNzwqG9pfcAKW9BDchZPWuJbnGFF4gLBJ2aAu'
         secret_signing_seed = 'fc67c820e0fe764dc9d3536ae753de67cd29ca07a7774849f7e238a471dfcd8a'
-        self.blockchain_service = BlockchainService(factomd_host,
+        cls.blockchain_service = BlockchainService(factomd_host,
                                                     factom_walletd_host,
                                                     ec_address,
-                                                    secret_signing_seed,
-                                                    chain_id='4fe630d0a0ed2ee6cb1c75162cf7a5274339f8db8e1d9f8d6eecaf56e6e537fb')
+                                                    secret_signing_seed)
 
-    @skip('Cannot write/read from the blockchain without factomd running')
     def test_blockchain_write(self):
         resp = self.blockchain_service.write(['test', 'external', 'ids'], 'test-content')
         assert resp['message'] == 'Entry Reveal Success'
@@ -40,15 +40,14 @@ class TestBlockchainService(TestCase):
         sig = self.blockchain_service.create_signature(msg)
         assert msg == self.blockchain_service.signature_to_msg(sig, self.blockchain_service.public_key)
 
-    @skip('Cannot write/read from the blockchain without factomd running')
     def test_register(self):
         image_path = self.get_test_image_path()
         with open(image_path) as f:
             img_bytes = bytes(f.read())
             resp = self.blockchain_service.register(img_bytes)
+            time.sleep(10)
             assert resp['message'] == 'Entry Reveal Success'
 
-    #@skip('Cannot write/read from the blockchain without factomd running')
     def test_verify(self):
         image_path = self.get_test_image_path()
         with open(image_path) as f:
@@ -61,8 +60,4 @@ class TestBlockchainService(TestCase):
         return os.path.join(TOP_DIR, 'apps', 'issuer', 'testfiles', *args)
 
     def get_test_image_path(self):
-        return os.path.join(self.get_testfiles_path(), 'test-badge.png')
-
-    def _base64_data_uri_encode(self, file, mime):
-        encoded = base64.b64encode(file.read())
-        return "data:{};base64,{}".format(mime, encoded)
+        return os.path.join(self.get_testfiles_path(), 'guinea_pig_testing_badge.png')

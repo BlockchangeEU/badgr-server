@@ -98,3 +98,10 @@ Using the `factom-cli` you can create a new chain as follows:
 factom-cli addchain -n {chainName} {EC_Public_Key} < {filename}
 ```
 where the data for the first entry is contained in the file `{filename}`.
+
+#### Blockchain Service Tests
+In order to run the tests for the Factom blockchain connection, ensure:
+* a valid entry credit address being used in `./apps/issuer/tests/test_blockchain_service.py`
+* `factomd` and `factom-walletd` are running on a local testnet with 6s block time
+* the host addresses for `factomd` and `factom-walletd` in `./apps/issuer/tests/test_blockchain_service.py` correspond to the locations of the locally running daemons. 
+
