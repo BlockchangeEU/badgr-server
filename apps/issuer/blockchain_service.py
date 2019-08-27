@@ -13,7 +13,6 @@ from issuer.factom_api_service import ExtendedFactomd
 
 
 class BlockchainService:
-
     """
     Initializes a connection with factomd and factom-walletd
     as well as instantiates a private key for signing
@@ -27,6 +26,7 @@ class BlockchainService:
     :param secret_seed: Secret seed for private key in hex
     :type secret_seed: str (hex)
     """
+
     def __init__(self, factomd_host, factom_walletd_host, ec_address, secret_seed, chain_id=None):
         self.factomd = ExtendedFactomd(
             host=factomd_host,
@@ -120,7 +120,6 @@ class BlockchainService:
         return commit_response
 
     def verify(self, input_data, public_key_seed):
-
         hash_string = binascii.hexlify(self.input_to_hash_bytes(input_data))
         chain_data = self.factomd.read_chain(self.chain_id)
 
@@ -130,13 +129,13 @@ class BlockchainService:
                    and chain_entry['extids'][1] == public_key_seed]
 
         if len(entries) < 1:
-            return {'message': 'Entry not found in chain {}'.format(self.chain_id), 'verified':False}
+            return {'message': 'Entry not found in chain {}'.format(self.chain_id), 'verified': False}
 
         for chain_entry in entries:
             if self.verify_signed_entry(chain_entry, public_key_seed):
-                return {'message': 'Entry found in chain {}'.format(self.chain_id), 'verified':True}
+                return {'message': 'Entry found in chain {}'.format(self.chain_id), 'verified': True}
 
-        return {'message': ' Entry found in chain {} but signature was invalid'.format(self.chain_id), 'verified': False}
+        return {'message': 'Entry found in chain {} but signature was invalid'.format(self.chain_id), 'verified': False}
 
     @staticmethod
     def input_to_hash_bytes(input_data):

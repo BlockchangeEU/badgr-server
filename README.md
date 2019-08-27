@@ -61,7 +61,7 @@ apt install libjpeg8-dev zlib1g-dev
 * Sign in as the superuser you created above
 
 ### Note for PyCharm Users (All Platforms)
-If you want to use `badgr-server` in PyCharm, you have to add the `./apps` directory to the local Python path. You can do this by going to Settings->Project->Project Interpreter and clicking on the gear icon next to the selected interpreter. Then go to Show All. With the project interpreter selected, the bottom icon in the right will open the Python path. Click the "+" icon and select the `./apps` folder to add to the path.
+If you want to use `badgr-server` in PyCharm, you have to add the `./apps` directory to the local Python path. You can do this by going to Settings->Project->Project Interpreter and clicking on the gear icon next to the selected interpreter. Then go to Show All. With the project interpreter selected, the bottom icon (show paths) in the right will open the Python path. Click the "+" icon and select the `./apps` folder to add to the path.
 
 ### Configuring Factom Blockchain Connection
 
@@ -95,9 +95,8 @@ BADGE_COMMIT_CHAIN_ID = '<insert-chain-id>'
 
 Using the `factom-cli` you can create a new chain as follows:
 ```bash
-factom-cli addchain -n {chainName} {EC_Public_Key} < {filename}
+echo '{}' | factom-cli addchain -n {chainName} {EC_Public_Key}
 ```
-where the data for the first entry is contained in the file `{filename}`.
 
 #### Blockchain Service Tests
 In order to run the tests for the Factom blockchain connection, ensure:

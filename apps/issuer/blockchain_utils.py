@@ -3,5 +3,4 @@ class BlockchainRegistrationError(Exception):
         self.message = message
 
     def __str__(self):
-        return repr('Could not register on the blockchain. Commit failed with message:' + self.message)
-
+        return repr('Could not register on the blockchain. Commit failed with message: ' + self.message)
