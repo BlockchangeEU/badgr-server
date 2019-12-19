@@ -120,7 +120,7 @@ TEMPLATES = [
 #
 ##
 
-HTTP_ORIGIN = "http://localhost:8000"
+HTTP_ORIGIN = "http://63.35.222.104:8000"
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -128,6 +128,7 @@ STATICFILES_FINDERS = [
 ]
 
 STATIC_ROOT = os.path.join(TOP_DIR, 'staticfiles')
+print(HTTP_ORIGIN)
 STATIC_URL = HTTP_ORIGIN+'/static/'
 STATICFILES_DIRS = [
     os.path.join(TOP_DIR, 'apps', 'mainsite', 'static'),

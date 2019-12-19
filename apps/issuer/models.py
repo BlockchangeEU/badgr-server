@@ -990,7 +990,7 @@ class BadgeInstance(BaseAuditedModel,
 
         adapter = get_adapter()
         adapter.send_mail(template_name, self.recipient_identifier, context=email_context)
-
+	print(self)
     def get_extensions_manager(self):
         return self.badgeinstanceextension_set
 
